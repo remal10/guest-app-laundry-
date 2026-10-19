@@ -18,7 +18,7 @@
     --header-overlay-gradient: linear-gradient(to top, rgba(22, 20, 18, 0.98) 0%, rgba(22, 20, 18, 0.5) 60%, transparent 100%);
     --header-img-opacity: 0.55;
     --card-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8);
-   --header-bg-img: url('/laundry/remal-hotel-night.jpg');;
+   --header-bg-img: url('/remal-hotel-night.jpg');;
 }
 
 .light-mode {
