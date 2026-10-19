@@ -36,7 +36,7 @@
     --header-overlay-gradient: linear-gradient(to top, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.3) 60%, transparent 100%);
     --header-img-opacity: 0.75;
     --card-shadow: 0 25px 50px -12px rgba(180, 122, 62, 0.12);
-    --header-bg-img: url('/laundry/remal-hotel-day.jpg');
+    --header-bg-img: url('/guest-app-laundry-/remal-hotel-day.jpg');
 }
 
 body { 
