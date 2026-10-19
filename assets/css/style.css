@@ -1,0 +1,898 @@
+/* ═══════════════════════════════════════════════════════════════════
+   REMAL GUEST LAUNDRY PORTAL — Styles
+   Module : Laundry (hébergé dans Guest Hub)
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+    --bg-dark: #0a0908;
+    --bg-card: rgba(22, 20, 18, 0.92);
+    --bg-card-hover: rgba(33, 30, 26, 0.95);
+    --bg-input: rgba(15, 14, 12, 0.95);
+    --text-gold: #DCA773;
+    --btn-gold-bg: #DCA773;
+    --gold-gradient: linear-gradient(135deg, #EAD0B3 0%, #DCA773 50%, #B88351 100%);
+    --border-gold: rgba(220, 167, 115, 0.35);
+    --border-gold-strong: rgba(220, 167, 115, 0.65);
+    --text-main: #ffffff;
+    --text-muted: #c2bab0;
+    --header-overlay-gradient: linear-gradient(to top, rgba(22, 20, 18, 0.98) 0%, rgba(22, 20, 18, 0.5) 60%, transparent 100%);
+    --header-img-opacity: 0.55;
+    --card-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8);
+   --header-bg-img: url('/laundry/remal-hotel-night.jpg');;
+}
+
+.light-mode {
+    --bg-dark: #f6f4f0;
+    --bg-card: rgba(255, 255, 255, 0.95);
+    --bg-card-hover: rgba(248, 246, 242, 0.98);
+    --bg-input: rgba(255, 255, 255, 0.95);
+    --text-gold: #b47a3e;
+    --btn-gold-bg: #cfa26d;
+    --gold-gradient: linear-gradient(135deg, #cfa26d 0%, #b47a3e 50%, #8c5822 100%);
+    --border-gold: rgba(180, 122, 62, 0.3);
+    --border-gold-strong: rgba(180, 122, 62, 0.6);
+    --text-main: #1c1917;
+    --text-muted: #57514a;
+    --header-overlay-gradient: linear-gradient(to top, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.3) 60%, transparent 100%);
+    --header-img-opacity: 0.75;
+    --card-shadow: 0 25px 50px -12px rgba(180, 122, 62, 0.12);
+    --header-bg-img: url('/laundry/remal-hotel-day.jpg');
+}
+
+body { 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    background-color: var(--bg-dark); 
+    color: var(--text-main); 
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.font-serif-luxury { font-family: 'Cinzel', serif; }
+.remal-card { background: var(--bg-card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border-gold-strong); box-shadow: var(--card-shadow); }
+.remal-input { background: var(--bg-input); border: 1px solid var(--border-gold-strong); color: var(--text-main); transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+.remal-input::placeholder { color: var(--text-muted); opacity: 0.8; }
+.remal-input:focus { border-color: var(--text-gold); box-shadow: 0 0 15px rgba(220, 167, 115, 0.3); outline: none; }
+.text-gold-gradient { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.text-muted-custom { color: var(--text-muted); }
+
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+
+.toggle-switch { position: relative; display: inline-block; width: 38px; height: 22px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--bg-input); border: 1px solid var(--border-gold-strong); transition: .3s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 30px; }
+.toggle-slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: var(--text-muted); transition: .3s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 50%; }
+input:checked + .toggle-slider { background-color: var(--border-gold-strong); border-color: var(--text-gold); }
+input:checked + .toggle-slider:before { transform: translateX(16px); background-color: var(--text-gold); }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+/* Animations pour transition Guest Hub */
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(1.3); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.laundry-transition-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    animation: fadeIn 0.3s ease;
+}
+
+.return-guesthub-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 9999;
+    background: var(--bg-card);
+    color: var(--text-gold);
+    border: 1px solid var(--border-gold-strong);
+    border-radius: 25px;
+    padding: 10px 18px;
+    font-weight: bold;
+    font-size: 11px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.return-guesthub-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(220, 167, 115, 0.4);
+}
+
+.guest-session-banner {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9998;
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold-strong);
+    border-radius: 12px;
+    padding: 10px 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    animation: slideUp 0.5s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+/* ═══════════════════════════════════════════════════════════════════
+   TIMELINE VISUELLE — Suivi commande guest
+   ═══════════════════════════════════════════════════════════════════ */
+
+.timeline-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold-strong);
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.timeline-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--text-gold);
+    box-shadow: 0 12px 30px rgba(220, 167, 115, 0.25);
+}
+
+.timeline-card:active {
+    transform: scale(0.98);
+}
+
+/* ─── Header de la carte ────────────────────────────────────────── */
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-gold);
+    margin-bottom: 1rem;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.timeline-receipt {
+    font-family: monospace;
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+.timeline-total {
+    font-family: 'Cinzel', serif;
+    color: var(--text-gold);
+    font-size: 14px;
+}
+
+/* ─── Frise chronologique ──────────────────────────────────────── */
+.timeline-steps {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    position: relative;
+    padding: 0 4px;
+}
+
+.timeline-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+    z-index: 2;
+    min-width: 0;
+}
+
+.timeline-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 2px solid #525252;
+    background: #262626;
+    color: #a8a29e;
+    position: relative;
+    z-index: 2;
+}
+
+/* Étape future */
+.timeline-dot.future {
+    background: var(--bg-dark);
+    border-color: var(--border-gold);
+    color: var(--text-muted);
+    opacity: 0.5;
+}
+
+/* Étape passée (complétée) */
+.timeline-dot.completed {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border-color: #10b981;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+
+/* Étape actuelle (pulse) */
+.timeline-dot.active {
+    background: var(--gold-gradient);
+    border-color: var(--text-gold);
+    color: #1c1917;
+    box-shadow: 0 0 20px rgba(220, 167, 115, 0.7);
+    animation: timelinePulse 2s ease-in-out infinite;
+}
+
+@keyframes timelinePulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(220, 167, 115, 0.7);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(220, 167, 115, 1);
+        transform: scale(1.08);
+    }
+}
+
+/* ─── Ligne entre les étapes ───────────────────────────────────── */
+.timeline-line {
+    position: absolute;
+    top: 18px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #525252;
+    z-index: 1;
+}
+
+.timeline-line-filled {
+    position: absolute;
+    top: 18px;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #10b981 0%, var(--text-gold) 100%);
+    z-index: 1;
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 0 8px rgba(220, 167, 115, 0.5);
+}
+
+/* ─── Label sous chaque étape ──────────────────────────────────── */
+.timeline-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-top: 6px;
+    text-align: center;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.timeline-step.completed .timeline-label {
+    color: #10b981;
+}
+
+.timeline-step.active .timeline-label {
+    color: var(--text-gold);
+    font-weight: 900;
+}
+
+/* ─── Estimation de temps ──────────────────────────────────────── */
+.timeline-estimate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-gold);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-gold);
+    text-align: center;
+}
+
+.timeline-estimate i {
+    font-size: 12px;
+    animation: hourglassRotate 2s ease-in-out infinite;
+}
+
+@keyframes hourglassRotate {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(180deg); }
+}
+
+/* ─── Light mode adjustments ──────────────────────────────────── */
+body.light-mode .timeline-card {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: rgba(180, 122, 62, 0.4);
+}
+
+body.light-mode .timeline-dot {
+    background: #f1f5f9;
+    border-color: rgba(180, 122, 62, 0.3);
+    color: #64748b;
+}
+
+body.light-mode .timeline-dot.completed {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #ffffff;
+}
+
+body.light-mode .timeline-dot.active {
+    background: linear-gradient(135deg, #cfa26d 0%, #b47a3e 100%);
+    color: #1c1917;
+}
+
+body.light-mode .timeline-line {
+    background: rgba(180, 122, 62, 0.3);
+}
+
+body.light-mode .timeline-line-filled {
+    background: linear-gradient(90deg, #10b981 0%, #b47a3e 100%);
+}
+
+body.light-mode .timeline-label {
+    color: #64748b;
+}
+
+body.light-mode .timeline-step.completed .timeline-label {
+    color: #059669;
+}
+
+body.light-mode .timeline-step.active .timeline-label {
+    color: #b47a3e;
+}
+
+body.light-mode .timeline-estimate {
+    color: #b47a3e;
+    border-color: rgba(180, 122, 62, 0.3);
+}
+
+/* ─── Responsive mobile ───────────────────────────────────────── */
+@media (max-width: 400px) {
+    .timeline-dot {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+    .timeline-line,
+    .timeline-line-filled {
+        top: 15px;
+    }
+    .timeline-label {
+        font-size: 8px;
+    }
+    .timeline-estimate {
+        font-size: 10px;
+    }
+}
+/* ═══════════════════════════════════════════════════════════
+   ✨ PREMIUM — Header parallaxe + shimmer
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Header parallaxe ─── */
+.header-parallax-wrap {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    transition: transform 0.15s ease-out;
+}
+
+.header-parallax-wrap > .header-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    will-change: transform;
+    transition: transform 0.1s linear;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.header-parallax-wrap > .header-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* ─── Shimmer doré sur le titre ─── */
+.shimmer-gold {
+    background: linear-gradient(
+        110deg,
+        #DCA773 0%,
+        #DCA773 30%,
+        #FFF8E0 50%,
+        #DCA773 70%,
+        #DCA773 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmerSlide 3s linear infinite;
+}
+
+body.light-mode .shimmer-gold {
+    background: linear-gradient(
+        110deg,
+        #b47a3e 0%,
+        #b47a3e 30%,
+        #FFE9B8 50%,
+        #b47a3e 70%,
+        #b47a3e 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+@keyframes shimmerSlide {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+/* ═══════════════════════════════════════════════════════════
+   ✨ PREMIUM — Badge panier pulse
+   ═══════════════════════════════════════════════════════════ */
+
+.badge-pulse {
+    animation: badgePulseAnim 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes badgePulseAnim {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(220, 167, 115, 0.7);
+    }
+    50% {
+        transform: scale(1.2);
+        box-shadow: 0 0 0 12px rgba(220, 167, 115, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(220, 167, 115, 0);
+    }
+}
+
+.floating-cart-pulse {
+    animation: floatingCartSlide 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes floatingCartSlide {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* ═══════════════════════════════════════════════════════════
+   ✨ PREMIUM — Étapes animées (Patch 2)
+   ═══════════════════════════════════════════════════════════ */
+
+.steps-indicator {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.step-chip {
+    position: relative;
+    background: var(--bg-card-hover);
+    border: 1px solid var(--border-gold);
+    border-radius: 12px;
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+
+/* Étape complétée (verte) */
+.step-chip.done {
+    background: linear-gradient(135deg, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0.05) 100%);
+    border-color: rgba(16, 185, 129, 0.5);
+    color: #6ee7b7;
+}
+
+/* Étape active (dorée + pulse) */
+.step-chip.active {
+    background: linear-gradient(135deg, var(--text-gold) 0%, #F8E9C0 100%);
+    border-color: var(--text-gold);
+    color: #1c1917;
+    box-shadow: 0 6px 20px rgba(220, 167, 115, 0.4);
+    animation: stepPulse 2s ease-in-out infinite;
+}
+
+.step-chip.active::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, #FFF8E0, transparent);
+    animation: stepShine 2s linear infinite;
+}
+
+body.light-mode .step-chip.done {
+    background: linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(16,185,129,0.03) 100%);
+    color: #059669;
+}
+
+body.light-mode .step-chip.active {
+    background: linear-gradient(135deg, #b47a3e 0%, #d9a76a 100%);
+    color: #ffffff;
+}
+
+@keyframes stepPulse {
+    0%, 100% { box-shadow: 0 6px 20px rgba(220, 167, 115, 0.4); }
+    50% { box-shadow: 0 6px 28px rgba(220, 167, 115, 0.7); }
+}
+
+@keyframes stepShine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+/* ═══════════════════════════════════════════════════════════
+   ✨ PREMIUM — Badge panier pulse (Patch 3)
+   ═══════════════════════════════════════════════════════════ */
+
+.badge-pulse {
+    animation: badgePulseAnim 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes badgePulseAnim {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(220, 167, 115, 0.7);
+    }
+    50% {
+        transform: scale(1.2);
+        box-shadow: 0 0 0 12px rgba(220, 167, 115, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(220, 167, 115, 0);
+    }
+}
+
+.floating-cart-pulse {
+    animation: floatingCartSlide 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes floatingCartSlide {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* ═══════════════════════════════════════════════════════════════════
+   📦 MY ORDERS (ORDERS-TRACKER) — Timeline de suivi
+   ═══════════════════════════════════════════════════════════════════ */
+
+.my-orders-section {
+    background: var(--bg-card-hover);
+    border: 1px solid var(--border-gold-strong);
+    border-radius: 20px;
+    padding: 16px;
+    margin: 12px 0;
+}
+
+.my-orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.my-order-card {
+    background: var(--bg-dark);
+    border: 1px solid var(--border-gold);
+    border-radius: 16px;
+    padding: 14px;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.my-order-card.active {
+    border-color: rgba(220, 167, 115, 0.5);
+    box-shadow: 0 0 20px rgba(220, 167, 115, 0.15);
+}
+
+.my-order-card.done {
+    opacity: 0.72;
+}
+
+.my-order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(220, 167, 115, 0.15);
+}
+
+.my-order-ref {
+    font-family: monospace;
+    font-size: 11px;
+    font-weight: 900;
+    color: var(--text-gold);
+}
+
+.my-order-date {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.my-order-badge {
+    font-size: 10px;
+    font-weight: 900;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Couleurs des badges */
+.my-order-badge.collected { background: rgba(120, 113, 108, 0.25); color: #d6d3d1; border: 1px solid #57534e; }
+.my-order-badge.washing { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid #3b82f6; }
+.my-order-badge.ready { background: rgba(168, 85, 247, 0.15); color: #d8b4fe; border: 1px solid #a855f7; }
+.my-order-badge.delivered { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid #10b981; }
+
+/* 🎯 LA TIMELINE (avec flex forcé) */
+.my-order-timeline {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    margin-bottom: 16px;
+    gap: 4px;
+}
+
+.my-order-timeline::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 12%;
+    right: 12%;
+    height: 2px;
+    background: rgba(220, 167, 115, 0.15);
+    z-index: 0;
+}
+
+.my-order-step {
+    flex: 1;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    gap: 6px;
+}
+
+.my-order-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    background: var(--bg-card);
+    border: 2px solid rgba(220, 167, 115, 0.2);
+    color: #57534e;
+    transition: all 0.3s ease;
+}
+
+.my-order-label {
+    font-size: 9px;
+    font-weight: 700;
+    color: #57534e;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.my-order-step.done .my-order-dot {
+    background: rgba(220, 167, 115, 0.15);
+    border-color: rgba(220, 167, 115, 0.5);
+    color: #DCA773;
+}
+.my-order-step.done .my-order-label {
+    color: #a8a29e;
+}
+
+.my-order-step.active .my-order-dot {
+    background: linear-gradient(135deg, #DCA773 0%, #F8E9C0 100%);
+    border-color: #F8E9C0;
+    color: #0f0e0c;
+    box-shadow: 0 0 0 0 rgba(220, 167, 115, 0.7);
+    animation: orderPulse 2s infinite;
+}
+.my-order-step.active .my-order-label {
+    color: #F8E9C0;
+    font-weight: 900;
+}
+
+/* Items */
+.my-order-items {
+    background: rgba(15, 14, 12, 0.5);
+    border-radius: 10px;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+}
+
+.my-order-item-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    color: #d6d3d1;
+    font-size: 11px;
+}
+
+.my-order-item-qty {
+    color: #DCA773;
+    font-weight: 900;
+}
+
+/* Footer */
+.my-order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(220, 167, 115, 0.15);
+    padding-top: 10px;
+}
+
+.my-order-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 11px;
+    color: #a8a29e;
+}
+
+.my-order-total {
+    color: #DCA773;
+    font-weight: 900;
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+}
+
+.my-order-chat-btn {
+    background: transparent;
+    border: 1px solid rgba(220, 167, 115, 0.5);
+    color: #DCA773;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+/* ═══════════════════════════════════════════════════════════════════
+   FIX — Mode clair pour My Orders
+   ═══════════════════════════════════════════════════════════════════ */
+
+body.light-mode .my-order-items {
+    background: rgba(0, 0, 0, 0.03) !important; /* Fond très léger au lieu du gris foncé */
+    border: 1px solid rgba(180, 122, 62, 0.15);
+}
+
+body.light-mode .my-order-item-row {
+    color: #334155 !important; /* Texte foncé */
+}
+
+body.light-mode .my-order-item-qty {
+    color: #b47a3e !important; /* Or plus foncé */
+}
+
+body.light-mode .my-order-card {
+    background: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .my-order-timeline::before {
+    background: rgba(180, 122, 62, 0.15) !important;
+}
+
+body.light-mode .my-order-dot {
+    background: #f8fafc !important;
+    border-color: rgba(180, 122, 62, 0.2) !important;
+    color: #64748b !important;
+}
+
+body.light-mode .my-order-step.active .my-order-dot {
+    background: linear-gradient(135deg, #cfa26d 0%, #b47a3e 100%) !important;
+    color: #ffffff !important;
+    border-color: #b47a3e !important;
+}
+
+body.light-mode .my-order-step.active .my-order-label {
+    color: #b47a3e !important;
+}
+
+body.light-mode .my-order-footer {
+    border-top-color: rgba(180, 122, 62, 0.15) !important;
+}
+
+body.light-mode .my-order-badge.delivered {
+    background: rgba(16, 185, 129, 0.1) !important;
+    color: #059669 !important;
+    border-color: rgba(16, 185, 129, 0.2) !important;
+}/* ═══════════════════════════════════════════════════════════════════
+   THEME ROOM SERVICE — Guest App
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* On force le fond et la couleur de texte selon le mode */
+body {
+    background-color: var(--bg-dark) !important;
+    color: var(--text-main) !important;
+}
+
+/* 🎯 Image de fond du Header (visible dans les 2 modes) */
+.header-parallax-wrap .header-bg {
+    background-image: var(--header-bg-img) !important;
+    opacity: var(--header-img-opacity) !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+/* Adaptation des cartes My Orders */
+.my-order-card {
+    background: var(--bg-card) !important;
+    border-color: var(--border-gold) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+}
+.my-order-timeline::before { background: var(--border-gold) !important; }
+.my-order-dot {
+    background: var(--bg-dark) !important;
+    border-color: var(--border-gold) !important;
+    color: var(--text-muted) !important;
+}
+.my-order-step.active .my-order-dot {
+    background: var(--text-gold) !important;
+    color: #fff !important;
+    border-color: var(--text-gold) !important;
+}
+.my-order-items { background: var(--bg-card-hover) !important; }
+.my-order-badge.delivered {
+    background: rgba(16, 185, 129, 0.1) !important;
+    color: #059669 !important;
+    border-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+/* Adaptation du Chat */
+.chat-modal-content { background: var(--bg-card) !important; border-color: var(--border-gold) !important; }
+.chat-modal-header { border-bottom-color: var(--border-gold) !important; }
+.chat-modal-title { color: var(--text-gold) !important; }
+.chat-input-bar { background: var(--bg-card-hover) !important; border-top-color: var(--border-gold) !important; }
+#chatInput { background: var(--bg-input) !important; color: var(--text-main) !important; border-color: var(--border-gold) !important; }
+
+/* Bouton Chat flottant */
+.chat-fab {
+    background: var(--text-gold) !important;
+    color: #fff !important;
+}
+
+/* Barre panier flottante */
+#floatingCartBar {
+    background: var(--bg-card) !important;
+    border-color: var(--border-gold) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+}
