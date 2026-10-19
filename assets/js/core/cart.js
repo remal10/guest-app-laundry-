@@ -12,15 +12,7 @@ let catalogCart = {};
 function openLaundryModal() {
     const modal = document.getElementById('laundryModal');
     if (modal) modal.classList.remove('hidden');
-       renderCatalogItems();
-    
-    // ✨ Pulse sur le badge panier
-    const badge = document.getElementById('selectedBadgeCount');
-    if (badge && delta > 0) {
-        badge.classList.remove('badge-pulse');
-        void badge.offsetWidth;
-        badge.classList.add('badge-pulse');
-    }
+    renderCatalogItems();
 }
 
 function closeLaundryModal() {
