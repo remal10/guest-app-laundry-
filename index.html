@@ -9,17 +9,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Tes CSS existants -->
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/chat.css">
     <link rel="stylesheet" href="assets/css/orders-tracker.css">
-    <link rel="stylesheet" href="css/welcome.css">
+    
+    <!-- 🎯 NOUVEAU CSS WELCOME (À la racine) -->
+    <link rel="stylesheet" href="welcome.css">
 </head>
 <body class="min-h-screen p-3 sm:p-6 flex items-center justify-center pb-24">
 
     <!-- ═══ SPLASH SCREEN (WELCOME PAGE) ═══ -->
     <div id="splashScreen">
         <div class="remal-logo-container">
-            <img src="assets/remal-logo.png" alt="Remal Logo" onerror="this.style.display='none'">
+            <!-- 🎯 CHEMIN DU LOGO CORRIGÉ -->
+            <img src="logo.jpg" alt="Remal Logo" onerror="this.style.display='none'">
         </div>
         <h1 class="remal-welcome-title">Remal Hotel & Villas</h1>
         <p class="remal-welcome-subtitle">Al Ruwais · Abu Dhabi</p>
@@ -439,8 +443,8 @@
     <script src="assets/js/services/chat.js"></script>
     <script src="assets/js/services/orders-tracker.js"></script>
     
-    <!-- SCRIPT SPLASH SCREEN -->
-    <script src="js/welcome.js"></script>
+    <!-- 🎯 NOUVEAU JS WELCOME (À la racine) -->
+    <script src="welcome.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
