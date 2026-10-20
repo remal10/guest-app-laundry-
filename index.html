@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Remal Hotel & Villas - Guest Laundry Portal</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -14,15 +16,15 @@
     <link rel="stylesheet" href="assets/css/chat.css">
     <link rel="stylesheet" href="assets/css/orders-tracker.css">
     
-    <!-- 🎯 NOUVEAU CSS WELCOME (À la racine) -->
+    <!-- 🎯 NOUVEAU CSS WELCOME -->
     <link rel="stylesheet" href="welcome.css">
 </head>
-<body class="min-h-screen p-3 sm:p-6 flex items-center justify-center pb-24">
+<!-- 🎯 FIX : Retrait des classes flex pour ne pas casser le Splash Screen -->
+<body class="min-h-screen">
 
     <!-- ═══ SPLASH SCREEN (WELCOME PAGE) ═══ -->
     <div id="splashScreen">
         <div class="remal-logo-container">
-            <!-- 🎯 CHEMIN DU LOGO CORRIGÉ -->
             <img src="logo.png" alt="Remal Logo" onerror="this.style.display='none'">
         </div>
         <h1 class="remal-welcome-title">Remal Hotel & Villas</h1>
@@ -33,7 +35,7 @@
         <div class="remal-splash-footer">Guest Laundry & Concierge Service</div>
     </div>
 
-    <!-- ═══ MAIN APP (Ton application Guest normale) ═══ -->
+    <!-- ═══ MAIN APP (Cachée au début) ═══ -->
     <div id="mainApp" style="display: none !important;">
 
         <!-- BOUTON RETOUR GUEST HUB -->
@@ -52,7 +54,7 @@
         </div>
 
         <!-- CARTE PRINCIPALE -->
-        <div class="w-full max-w-md remal-card p-6 sm:p-8 rounded-[2rem] space-y-6 relative">
+        <div class="w-full max-w-md remal-card p-6 sm:p-8 rounded-[2rem] space-y-6 relative mx-auto mt-3 sm:mt-6 mb-24">
             
             <!-- BARRE SUPÉRIEURE -->
             <div class="flex justify-between items-center">
@@ -443,7 +445,7 @@
     <script src="assets/js/services/chat.js"></script>
     <script src="assets/js/services/orders-tracker.js"></script>
     
-    <!-- 🎯 NOUVEAU JS WELCOME (À la racine) -->
+    <!-- 🎯 NOUVEAU JS WELCOME -->
     <script src="welcome.js"></script>
 
     <script>
