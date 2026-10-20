@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════
-// REMAL GUEST APP — WELCOME SCREEN LOGIC (VERSION FINALE)
+// REMAL GUEST APP — WELCOME SCREEN LOGIC
 // ═══════════════════════════════════════════════════════════════════
 
 function enterApp() {
@@ -35,16 +35,10 @@ function enterApp() {
     console.log('✅ [Welcome] App revealed');
 }
 
-// Exposer globalement (au cas où)
+// Exposer globalement
 window.enterApp = enterApp;
 
 // Init
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('✅ [Welcome] Splash screen loaded and ready');
-    
-    // S'assurer que l'app est bien cachée au démarrage
-    const mainApp = document.getElementById('mainApp');
-    if (mainApp) {
-        mainApp.style.display = 'none';
-    }
+    console.log('✅ [Welcome] Splash screen loaded');
 });
