@@ -1,44 +1,40 @@
 // ═══════════════════════════════════════════════════════════════════
-// REMAL GUEST APP — WELCOME SCREEN LOGIC
+// REMAL GUEST APP — WELCOME SCREEN LOGIC (IMMERSIVE)
 // ═══════════════════════════════════════════════════════════════════
 
 function enterApp() {
-    console.log('🎬 [Welcome] Enter button clicked');
-    
     const splash = document.getElementById('splashScreen');
     const mainApp = document.getElementById('mainApp');
 
-    if (!splash || !mainApp) {
-        console.error('❌ [Welcome] Elements not found');
-        return;
-    }
+    if (!splash || !mainApp) return;
 
-    // 1. Afficher l'app principale (on enlève le style inline display:none)
+    // 1. On affiche l'application en fond
     mainApp.style.display = 'block';
-    
-    // 2. Forcer l'application du style (pour la transition)
     void mainApp.offsetWidth;
-    
-    // 3. Animer le fade out du splash
+
+    // 2. On lance l'animation de disparition du Splash
     splash.style.opacity = '0';
     splash.style.visibility = 'hidden';
     
-    // 4. Retirer le splash du DOM après l'animation
+    // 3. On nettoie après l'animation
     setTimeout(() => {
         splash.style.display = 'none';
         mainApp.classList.add('visible');
-    }, 800);
+    }, 1000);
 
-    // 5. Vibration premium
-    if (navigator.vibrate) navigator.vibrate(50);
-    
-    console.log('✅ [Welcome] App revealed');
+    // 4. Vibration "haptique" premium
+    if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
 }
 
 // Exposer globalement
 window.enterApp = enterApp;
 
-// Init
+// Effet de machine à écrire au chargement
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('✅ [Welcome] Splash screen loaded');
+    const textElement = document.querySelector('.remal-welcome-text');
+    if (textElement) {
+        const text = `"Every detail matters.<br>We are delighted to serve you."`;
+        // On garde le texte tel quel mais on peut ajouter une logique ici si besoin
+        // L'animation de base est gérée par le CSS (fadeUp)
+    }
 });
