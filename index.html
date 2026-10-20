@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Remal Hotel & Villas - Guest Laundry Portal</title>
     
+    <!-- 🎯 PWA : Manifest & Theme -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#DCA773">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
@@ -663,7 +667,7 @@ window.__guestChatSend = async function () {
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        // On affiche la bannière 5 secondes après le chargement pour ne pas gêner le Splash Screen
+        // On affiche la bannière 5 secondes après le chargement
         setTimeout(() => {
             if (pwaBanner) pwaBanner.style.display = 'flex';
         }, 5000);
@@ -679,6 +683,21 @@ window.__guestChatSend = async function () {
                 }
                 deferredPrompt = null;
             }
+        });
+    }
+</script>
+
+<!-- 🎯 SCRIPT SERVICE WORKER (PWA) -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then((registration) => {
+                    console.log('✅ [PWA] Service Worker enregistré avec succès !');
+                })
+                .catch((err) => {
+                    console.warn('⚠️ [PWA] Erreur d\'enregistrement du Service Worker:', err);
+                });
         });
     }
 </script>
