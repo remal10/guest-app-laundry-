@@ -16,10 +16,9 @@
     <link rel="stylesheet" href="assets/css/chat.css">
     <link rel="stylesheet" href="assets/css/orders-tracker.css">
     
-    <!-- 🎯 NOUVEAU CSS WELCOME -->
-    <link rel="stylesheet" href="welcome.css">
+    <!-- 🎯 CSS WELCOME (Chemin corrigé) -->
+    <link rel="stylesheet" href="assets/css/welcome.css">
 </head>
-<!-- 🎯 FIX : Retrait des classes flex pour ne pas casser le Splash Screen -->
 <body class="min-h-screen">
 
     <!-- ═══ SPLASH SCREEN (WELCOME PAGE) ═══ -->
@@ -38,13 +37,11 @@
     <!-- ═══ MAIN APP (Cachée au début) ═══ -->
     <div id="mainApp" style="display: none !important;">
 
-        <!-- BOUTON RETOUR GUEST HUB -->
         <button id="returnToGuestHubBtn" class="return-guesthub-btn hidden" onclick="returnToGuestHub()">
             <span>🏨</span>
             <span>Guest Hub</span>
         </button>
 
-        <!-- BANDEAU SESSION GUEST -->
         <div id="guestSessionBanner" class="guest-session-banner hidden">
             <span style="font-size: 20px;">👤</span>
             <div>
@@ -53,10 +50,8 @@
             </div>
         </div>
 
-        <!-- CARTE PRINCIPALE -->
         <div class="w-full max-w-md remal-card p-6 sm:p-8 rounded-[2rem] space-y-6 relative mx-auto mt-3 sm:mt-6 mb-24">
             
-            <!-- BARRE SUPÉRIEURE -->
             <div class="flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <button onclick="toggleTheme()" class="bg-[var(--bg-card-hover)] text-[var(--text-gold)] border border-[var(--border-gold-strong)] w-10 h-10 rounded-2xl text-xs flex items-center justify-center shadow-sm transition hover:scale-105 active:scale-95" title="Toggle Theme">
@@ -70,7 +65,6 @@
                     </button>
                 </div>
 
-                <!-- SELECTEUR DE LANGUE -->
                 <div class="relative inline-block text-left">
                     <button onclick="toggleLangDropdown()" id="langDropdownBtn" class="bg-[var(--bg-card-hover)] text-[var(--text-gold)] border border-[var(--border-gold-strong)] text-xs font-bold rounded-2xl px-3.5 py-2 flex items-center gap-2 shadow-sm transition hover:scale-105">
                         <span id="currentLangFlag">🇬🇧</span> <span id="currentLangText">English</span> <i class="fas fa-chevron-down text-[9px] opacity-80"></i>
@@ -84,7 +78,6 @@
                 </div>
             </div>
 
-            <!-- EN-TÊTE BANNIÈRE -->
             <div class="header-parallax-wrap relative text-center border border-[var(--border-gold-strong)] pb-6 pt-7 rounded-2xl shadow-inner bg-[var(--bg-card)] overflow-hidden">
                 <div class="header-bg" style="background-image: var(--header-bg-img); opacity: var(--header-img-opacity);"></div>
                 <div class="absolute inset-0 pointer-events-none" style="background: var(--header-overlay-gradient);"></div>
@@ -98,20 +91,16 @@
                 </div>
             </div>
 
-            <!-- BANDEAU DE STATUT DYNAMIQUE -->
             <div id="guestStatusDisplay" class="hidden space-y-2"></div>
 
-            <!-- INDICATEUR D'ÉTAPES -->
             <div class="steps-indicator" id="stepsIndicator">
                 <div class="step-chip active" id="step1Chip">1. Room</div>
                 <div class="step-chip" id="step2Chip">2. Selection</div>
                 <div class="step-chip" id="step3Chip">3. Send</div>
             </div>
 
-            <!-- FORMULAIRE -->
             <div class="space-y-4 text-xs">
                 
-                <!-- ÉTAPE 1 : NUMÉRO DE CHAMBRE -->
                 <div>
                     <div class="flex justify-between items-center mb-1">
                         <label class="block font-bold text-[var(--text-gold)] uppercase tracking-wider text-[10px]">Room Number *</label>
@@ -120,7 +109,6 @@
                     <input type="text" id="guestRoomInput" oninput="onRoomNumberTyped(this.value)" placeholder="e.g., 103" class="w-full remal-input rounded-2xl p-4 font-bold text-xl tracking-wide shadow-inner">
                 </div>
 
-                <!-- ÉTAPE 2 : VÉRIFICATION DU NOM -->
                 <div id="guestVerificationBox" class="hidden p-4 bg-[var(--bg-card-hover)] border border-[var(--border-gold-strong)] rounded-2xl space-y-2.5 animate-fade-in shadow-inner">
                     <label class="block font-bold text-[var(--text-gold)] text-[10px] uppercase tracking-wider">Identity Verification *</label>
                     <p class="text-[10px] text-[var(--text-muted)]">Enter any name on your reservation (e.g., Sangare or Zidane).</p>
@@ -132,7 +120,6 @@
                     </div>
                 </div>
 
-                <!-- FICHE CLIENT CONFIRMÉE -->
                 <div id="roomInfoBox" class="hidden p-4 bg-[var(--bg-card-hover)] border border-[var(--border-gold-strong)] rounded-2xl space-y-2 transition-all animate-fade-in shadow-inner">
                     <div class="flex justify-between font-semibold">
                         <span class="text-[var(--text-muted)] text-[11px]">Guest Name:</span> 
@@ -144,7 +131,6 @@
                     </div>
                 </div>
 
-                <!-- TOGGLE SWITCH EXTRA CHARGED -->
                 <div class="flex items-center justify-between p-3.5 bg-[var(--bg-card-hover)] border border-[var(--border-gold-strong)] rounded-2xl cursor-pointer transition hover:border-[var(--text-gold)] shadow-sm">
                     <label for="extraChargedCheck" class="font-bold text-[var(--text-main)] cursor-pointer select-none text-[11px] pr-2">I accept to pay for Extra Charged items</label>
                     <label class="toggle-switch">
@@ -166,7 +152,6 @@
                     </select>
                 </div>
 
-                <!-- CATALOGUE -->
                 <div>
                     <button onclick="openLaundryModal()" class="w-full bg-[var(--bg-card-hover)] hover:border-[var(--text-gold)] text-[var(--text-gold)] border border-[var(--border-gold-strong)] font-bold py-4 px-4 rounded-2xl transition flex items-center justify-between shadow-sm hover:scale-[1.01] active:scale-[0.99]">
                         <span class="flex items-center gap-3"><i class="fas fa-shirt text-sm opacity-90"></i> <span>Select Laundry Items</span></span>
@@ -174,13 +159,11 @@
                     </button>
                 </div>
 
-                <!-- NOTES -->
                 <div>
                     <label class="block font-bold text-[var(--text-gold)] mb-1.5 uppercase tracking-wider text-[10px]">Special Recommendations / Notes</label>
                     <textarea id="guestDetailsArea" placeholder="e.g., Stain on collar, handle with care..." class="w-full h-20 remal-input rounded-2xl p-3.5 outline-none resize-none font-medium text-xs"></textarea>
                 </div>
 
-                <!-- BOUTONS D'ENVOI -->
                 <div class="space-y-3 pt-2">
                     <button onclick="demanderConfirmation('direct')" class="w-full bg-[var(--text-gold)] text-white font-black py-4 rounded-2xl text-xs sm:text-sm shadow-lg transition-all flex items-center justify-center gap-2.5 uppercase tracking-widest hover:opacity-90 hover:scale-[1.01] active:scale-[0.99]">
                         <i class="fas fa-concierge-bell text-base"></i> 
@@ -199,7 +182,6 @@
             </div>
         </div>
 
-        <!-- 🧾 MODAL — MY ORDERS (Click to see more) -->
         <div id="myOrdersModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md z-[140] flex items-center justify-center p-4 animate-fade-in">
             <div class="bg-[var(--bg-card)] border border-[var(--border-gold-strong)] w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
                 
@@ -222,13 +204,11 @@
             </div>
         </div>
 
-        <!-- 💬 CHAT — Floating Action Button -->
         <button id="chatFab" onclick="GuestChat.open()" class="chat-fab hidden" title="Chat with reception">
             <i class="fas fa-comments"></i>
             <span id="chatFabBadge" class="chat-fab-badge hidden">0</span>
         </button>
 
-        <!-- 💬 CHAT — Modal -->
         <div id="chatModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md z-[150] flex items-center justify-center p-4">
             <div class="chat-modal-content" style="height: 70vh; max-height: 600px;">
                 <div class="chat-modal-header">
@@ -263,7 +243,6 @@
             </div>
         </div>
 
-        <!-- BARRE FLOTTANTE PANIER -->
         <div id="floatingCartBar" class="hidden fixed bottom-4 left-4 right-4 max-w-md mx-auto p-3.5 rounded-2xl z-50 flex justify-between items-center animate-fade-in no-print" style="background: var(--bg-card); border: 1px solid var(--border-gold-strong); box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
             <div class="flex items-center gap-3">
                 <div class="w-9 h-9 rounded-xl bg-[var(--text-gold)] text-white font-black flex items-center justify-center text-xs shadow-md">
@@ -279,7 +258,6 @@
             </button>
         </div>
 
-        <!-- MODALE CATALOGUE ET TARIFS -->
         <div id="laundryModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center p-4 animate-fade-in">
             <div class="bg-[var(--bg-card)] border border-[var(--border-gold-strong)] w-full max-w-lg rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
                 
@@ -324,7 +302,6 @@
             </div>
         </div>
 
-        <!-- MODALE POLITIQUE DE L'HÔTEL ET VALIDATION -->
         <div id="policyModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md z-[120] flex items-center justify-center p-4 animate-fade-in">
             <div class="bg-[var(--bg-card)] border border-[var(--border-gold-strong)] w-full max-w-lg rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col text-xs" id="policyModalContent">
                 
@@ -375,7 +352,6 @@
             </div>
         </div>
 
-        <!-- MODALE DE VISUALISATION DÉTAILLÉE DU BORDEREAU CLIENT -->
         <div id="receiptModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md z-[130] flex items-center justify-center p-4 animate-fade-in">
             <div class="bg-[var(--bg-card)] border border-[var(--border-gold-strong)] w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col text-xs">
                 
@@ -445,8 +421,8 @@
     <script src="assets/js/services/chat.js"></script>
     <script src="assets/js/services/orders-tracker.js"></script>
     
-    <!-- 🎯 NOUVEAU JS WELCOME -->
-    <script src="welcome.js"></script>
+    <!-- 🎯 JS WELCOME (Chemin corrigé) -->
+    <script src="assets/js/welcome.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
