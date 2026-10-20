@@ -1,0 +1,165 @@
+/* ═══════════════════════════════════════════════════════════════════
+   REMAL GUEST APP — WELCOME SCREEN (SPLASH)
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+    --gold: #DCA773;
+    --gold-light: #F8E9C0;
+    --dark: #0a0908;
+    --dark-surface: #12100e;
+    --text-main: #f5f5f4;
+    --text-muted: #a8a29e;
+}
+
+/* Animations */
+@keyframes remalFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes remalGlow {
+    0% { filter: drop-shadow(0 0 10px rgba(220, 167, 115, 0.2)); }
+    50% { filter: drop-shadow(0 0 30px rgba(220, 167, 115, 0.6)); }
+    100% { filter: drop-shadow(0 0 10px rgba(220, 167, 115, 0.2)); }
+}
+
+/* Splash Screen Container */
+#splashScreen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, var(--dark-surface) 0%, var(--dark) 100%);
+    z-index: 99999;
+    transition: opacity 0.8s ease, visibility 0.8s;
+}
+
+/* Motif de fond subtil (grille dorée) */
+#splashScreen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(220, 167, 115, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(220, 167, 115, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+}
+
+/* Logo */
+.remal-logo-container {
+    position: relative;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: remalFadeIn 1.2s ease forwards 0.5s;
+}
+
+.remal-logo-container img {
+    height: 140px;
+    width: auto;
+    object-fit: contain;
+    animation: remalGlow 4s infinite ease-in-out;
+}
+
+/* Titres */
+.remal-welcome-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-align: center;
+    opacity: 0;
+    animation: remalFadeIn 1.2s ease forwards 1s;
+    margin-bottom: 10px;
+}
+
+.remal-welcome-subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-align: center;
+    opacity: 0;
+    animation: remalFadeIn 1.2s ease forwards 1.5s;
+    margin-bottom: 60px;
+}
+
+.remal-gold-line {
+    width: 60px;
+    height: 2px;
+    background: var(--gold);
+    margin: 0 auto 60px auto;
+    opacity: 0;
+    animation: remalFadeIn 1.2s ease forwards 1.8s;
+}
+
+/* Citation */
+.remal-welcome-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--text-main);
+    text-align: center;
+    max-width: 80%;
+    line-height: 1.6;
+    opacity: 0;
+    animation: remalFadeIn 1.2s ease forwards 2.2s;
+    margin-bottom: 80px;
+}
+
+/* Bouton */
+.remal-btn-enter {
+    position: relative;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 18px 60px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 50px;
+    overflow: hidden;
+    opacity: 0;
+    animation: remalFadeIn 1.2s ease forwards 2.8s;
+    transition: all 0.4s ease;
+    z-index: 10;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.remal-btn-enter:hover, .remal-btn-enter:active {
+    background: var(--gold);
+    color: var(--dark);
+    box-shadow: 0 0 30px rgba(220, 167, 115, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Footer */
+.remal-splash-footer {
+    position: absolute;
+    bottom: 30px;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: remalFadeIn 1.2s ease forwards 3.2s;
+}
+
+/* Main App - cachée au début */
+#mainApp {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+#mainApp.visible {
+    display: block;
+    opacity: 1;
+}
