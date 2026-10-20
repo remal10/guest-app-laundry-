@@ -40,6 +40,17 @@
         <button class="remal-btn-enter" onclick="enterApp()">Enter Experience</button>
     </div>
 
+    <!-- ═══ BANNIÈRE INSTALLATION APP (PWA) ═══ -->
+    <div id="pwaInstallBanner" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #181614; border: 1px solid #DCA773; border-radius: 16px; padding: 16px; width: 90%; max-width: 400px; z-index: 999999; align-items: center; gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+        <img src="logo.png" alt="Remal" style="width: 40px; height: 40px; border-radius: 8px;">
+        <div style="flex: 1; text-align: left;">
+            <h4 style="color: #DCA773; font-size: 14px; font-weight: 800; margin: 0;">Install Remal App</h4>
+            <p style="color: #a8a29e; font-size: 11px; margin: 2px 0 0;">Add to home screen for quick access</p>
+        </div>
+        <button id="pwaInstallBtn" style="background: #DCA773; color: #12100e; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer;">Install</button>
+        <button onclick="document.getElementById('pwaInstallBanner').style.display='none'" style="background: transparent; border: none; color: #78716c; font-size: 18px; cursor: pointer; padding: 4px;">✕</button>
+    </div>
+
     <!-- ═══ MAIN APP (Cachée au début) ═══ -->
     <div id="mainApp" style="display: none !important;">
 
@@ -642,15 +653,35 @@ window.__guestChatSend = async function () {
     }
 };
 </script>
-<!-- ═══ BANNIÈRE INSTALLATION APP (PWA) ═══ -->
-<div id="pwaInstallBanner" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #181614; border: 1px solid #DCA773; border-radius: 16px; padding: 16px; width: 90%; max-width: 400px; z-index: 999999; align-items: center; gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
-    <img src="logo.png" alt="Remal" style="width: 40px; height: 40px; border-radius: 8px;">
-    <div style="flex: 1; text-align: left;">
-        <h4 style="color: #DCA773; font-size: 14px; font-weight: 800; margin: 0;">Install Remal App</h4>
-        <p style="color: #a8a29e; font-size: 11px; margin: 2px 0 0;">Add to home screen for quick access</p>
-    </div>
-    <button id="pwaInstallBtn" style="background: #DCA773; color: #12100e; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer;">Install</button>
-    <button onclick="document.getElementById('pwaInstallBanner').style.display='none'" style="background: transparent; border: none; color: #78716c; font-size: 18px; cursor: pointer; padding: 4px;">✕</button>
-</div>
+
+<!-- 🎯 SCRIPT POUR L'INSTALLATION PWA -->
+<script>
+    let deferredPrompt;
+    const pwaBanner = document.getElementById('pwaInstallBanner');
+    const pwaInstallBtn = document.getElementById('pwaInstallBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        // On affiche la bannière 5 secondes après le chargement pour ne pas gêner le Splash Screen
+        setTimeout(() => {
+            if (pwaBanner) pwaBanner.style.display = 'flex';
+        }, 5000);
+    });
+
+    if (pwaInstallBtn) {
+        pwaInstallBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    pwaBanner.style.display = 'none';
+                }
+                deferredPrompt = null;
+            }
+        });
+    }
+</script>
+
 </body>
 </html>
