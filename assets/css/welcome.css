@@ -1,188 +1,647 @@
-/* ═══════════════════════════════════════════════════════════════════
-   REMAL GUEST APP — LUXURY SPLASH SCREEN (V2 - IMMERSIVE)
-   ═══════════════════════════════════════════════════════════════════ */
+<!DOCTYPE html>
+<html lang="fr" dir="ltr" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Remal Hotel & Villas - Guest Laundry Portal</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tes CSS existants -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/chat.css">
+    <link rel="stylesheet" href="assets/css/orders-tracker.css">
+    
+    <!-- 🎯 CSS WELCOME -->
+    <link rel="stylesheet" href="assets/css/welcome.css">
+</head>
+<body class="min-h-screen">
 
-#mainApp {
-    display: none !important;
-    opacity: 0;
-    width: 100%;
-    min-height: 100vh;
-    transition: opacity 0.8s ease;
+    <!-- ═══ SPLASH SCREEN (WELCOME PAGE) ═══ -->
+    <div id="splashScreen">
+        <div class="remal-logo-container">
+            <img src="logo.png" alt="Remal Logo" onerror="this.style.display='none'">
+        </div>
+        
+        <div class="remal-gold-line"></div>
+        
+        <!-- 🎯 CITATION -->
+        <p class="remal-welcome-text">"Your home away from home."</p>
+        
+        <!-- 🎯 TOUCHE LAUNDRY -->
+        <p style="color: #DCA773; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; margin-top: -30px; margin-bottom: 40px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; opacity: 0.9;">
+            Laundry & Valet
+        </p>
+
+        <button class="remal-btn-enter" onclick="enterApp()">Enter Experience</button>
+    </div>
+
+    <!-- ═══ MAIN APP (Cachée au début) ═══ -->
+    <div id="mainApp" style="display: none !important;">
+
+        <button id="returnToGuestHubBtn" class="return-guesthub-btn hidden" onclick="returnToGuestHub()">
+            <span>🏨</span>
+            <span>Guest Hub</span>
+        </button>
+
+        <div id="guestSessionBanner" class="guest-session-banner hidden">
+            <span style="font-size: 20px;">👤</span>
+            <div>
+                <p style="color: var(--text-gold); font-size: 11px; font-weight: bold; margin: 0;" id="sessionGuestName">---</p>
+                <p style="color: var(--text-muted); font-size: 9px; margin: 2px 0 0;" id="sessionGuestRoom">Chambre ---</p>
+            </div>
+        </div>
+
+        <div class="w-full max-w-md remal-card p-6 sm:p-8 rounded-[2rem] space-y-6 relative mx-auto mt-3 sm:mt-6 mb-24">
+            
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleTheme()" class="bg-[var(--bg-card-hover)] text-[var(--text-gold)] border border-[var(--border-gold-strong)] w-10 h-10 rounded-2xl text-xs flex items-center justify-center shadow-sm transition hover:scale-105 active:scale-95" title="Toggle Theme">
+                        <i class="fas fa-moon text-sm" id="themeIcon"></i>
+                    </button>
+
+                    <button onclick="GuestOrders.toggle()" id="myOrdersNavBtn" class="hidden relative bg-[var(--bg-card-hover)] text-[var(--text-gold)] border border-[var(--border-gold-strong)] px-4 h-10 rounded-2xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition hover:scale-105 active:scale-95" title="My Orders">
+                        <i class="fas fa-receipt text-sm"></i>
+                        <span>My Orders</span>
+                        <span id="myOrdersBadge" class="hidden" style="position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; padding: 0 5px; background: var(--text-gold); color: #ffffff; font-size: 10px; font-weight: 900; border-radius: 9999px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-dark);">0</span>
+                    </button>
+                </div>
+
+                <div class="relative inline-block text-left">
+                    <button onclick="toggleLangDropdown()" id="langDropdownBtn" class="bg-[var(--bg-card-hover)] text-[var(--text-gold)] border border-[var(--border-gold-strong)] text-xs font-bold rounded-2xl px-3.5 py-2 flex items-center gap-2 shadow-sm transition hover:scale-105">
+                        <span id="currentLangFlag">🇬🇧</span> <span id="currentLangText">English</span> <i class="fas fa-chevron-down text-[9px] opacity-80"></i>
+                    </button>
+                    <div id="langMenu" class="hidden absolute right-0 mt-2 w-40 bg-[var(--bg-card)] border border-[var(--border-gold-strong)] rounded-2xl shadow-xl z-50 overflow-hidden text-xs font-medium animate-fade-in">
+                        <button onclick="changerLangueCustom('en')" class="w-full text-left px-4 py-3 hover:bg-[var(--bg-card-hover)] flex items-center gap-3 border-b border-[var(--border-gold)] transition text-[var(--text-main)]"><span>🇬🇧</span> English</button>
+                        <button onclick="changerLangueCustom('fr')" class="w-full text-left px-4 py-3 hover:bg-[var(--bg-card-hover)] flex items-center gap-3 border-b border-[var(--border-gold)] transition text-[var(--text-main)]"><span>🇫🇷</span> Français</button>
+                        <button onclick="changerLangueCustom('ar')" class="w-full text-left px-4 py-3 hover:bg-[var(--bg-card-hover)] flex items-center gap-3 border-b border-[var(--border-gold)] transition text-[var(--text-main)]"><span>🇦🇪</span> العربية</button>
+                        <button onclick="changerLangueCustom('hi')" class="w-full text-left px-4 py-3 hover:bg-[var(--bg-card-hover)] flex items-center gap-3 transition text-[var(--text-main)]"><span>🇮🇳</span> हिन्दी</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-parallax-wrap relative text-center border border-[var(--border-gold-strong)] pb-6 pt-7 rounded-2xl shadow-inner bg-[var(--bg-card)] overflow-hidden">
+                <div class="header-bg" style="background-image: var(--header-bg-img); opacity: var(--header-img-opacity);"></div>
+                <div class="absolute inset-0 pointer-events-none" style="background: var(--header-overlay-gradient);"></div>
+
+                <div class="header-content space-y-1.5 relative z-10">
+                    <h1 class="text-3xl font-serif-luxury font-bold text-[var(--text-gold)] tracking-[0.25em] drop-shadow-sm">REMAL</h1>
+                    <p class="text-[10px] text-[var(--text-muted)] tracking-[0.2em] font-bold uppercase">Hotel & Villas • Al Dhannah City</p>
+                    <div class="pt-2">
+                        <span class="inline-block text-[9px] bg-[var(--bg-card)] text-[var(--text-gold)] border border-[var(--border-gold-strong)] font-extrabold px-4 py-1.5 rounded-full uppercase tracking-[0.15em] shadow-sm">Laundry & Valet Service</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="guestStatusDisplay" class="hidden space-y-2"></div>
+
+            <div class="steps-indicator" id="stepsIndicator">
+                <div class="step-chip active" id="step1Chip">1. Room</div>
+                <div class="step-chip" id="step2Chip">2. Selection</div>
+                <div class="step-chip" id="step3Chip">3. Send</div>
+            </div>
+
+            <div class="space-y-4 text-xs">
+                
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="block font-bold text-[var(--text-gold)] uppercase tracking-wider text-[10px]">Room Number *</label>
+                        <button onclick="changerDeChambre()" id="btnChangeRoom" class="hidden text-[10px] text-[var(--text-gold)] hover:underline font-bold tracking-wider uppercase">Change</button>
+                    </div>
+                    <input type="text" id="guestRoomInput" oninput="onRoomNumberTyped(this.value)" placeholder="e.g., 103" class="w-full remal-input rounded-2xl p-4 font-bold text-xl tracking-wide shadow-inner">
+                </div>
+
+                <div id="guestVerificationBox" class="hidden p-4 bg-[var(--bg-card-hover)] border border-[var(--border-gold-strong)] rounded-2xl space-y-2.5 animate-fade-in shadow-inner">
+                    <label class="block font-bold text-[var(--text-gold)] text-[10px] uppercase tracking-wider">Identity Verification *</label>
+                    <p class="text-[10px] text-[var(--text-muted)]">Enter any name on your reservation (e.g., Sangare or Zidane).</p>
+                    <div class="flex gap-2">
+                        <input type="text" id="guestNameInput" placeholder="e.g., Sangare or Zidane" class="flex-1 remal-input rounded-xl p-3 font-semibold text-xs">
+                        <button onclick="verifierNomClient()" class="bg-[var(--text-gold)] text-white font-black px-4 rounded-xl text-xs uppercase tracking-wider hover:opacity-90 transition shadow-md">
+                            Verify
+                        </button>
+                    </div>
+                </div>
+
+                <div id="roomInfoBox" class="hidden p-4 bg-[var(--bg-card-hover)] border border-[var(--border-gold-strong)] rounded-2xl space-y-2 transition-all animate-fade-in shadow-inner">
+                    <div class="flex justify-between font-semibold">
+                        <span class="text-[var(--text-muted)] text-[11px]">Guest Name:</span> 
+                        <span id="displayGuestName" class="text-[var(--text-main)] font-bold text-xs">---</span>
+                    </div>
+                    <div class="flex justify-between font-semibold border-t border-[var(--border-gold)] pt-2">
+                        <span class="text-[var(--text-muted)] text-[11px]">PMS Quota:</span> 
+                        <span id="displayQuota" class="text-[#10b981] font-bold text-xs">---</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between p-3.5 bg-[var(--bg-card-hover)] border border-[var(--border-gold-strong)] rounded-2xl cursor-pointer transition hover:border-[var(--text-gold)] shadow-sm">
+                    <label for="extraChargedCheck" class="font-bold text-[var(--text-main)] cursor-pointer select-none text-[11px] pr-2">I accept to pay for Extra Charged items</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="extraChargedCheck">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-[var(--text-gold)] mb-1.5 uppercase tracking-wider text-[10px]">Service Type</label>
+                    <select id="guestServiceSelect" class="w-full remal-input rounded-2xl p-3.5 font-bold cursor-pointer text-xs">
+                        <option value="Laundry Collection">Laundry Collection</option>
+                        <option value="Dry Cleaning">Dry Cleaning</option>
+                        <option value="Pressing Only">Pressing Only</option>
+                        <option value="Extra Hangers">Extra Hangers</option>
+                        <option value="On Hanger">On Hanger</option>
+                        <option value="Remove the Stains">Remove the Stains</option>
+                        <option value="Urgent">Urgent</option>
+                    </select>
+                </div>
+
+                <div>
+                    <button onclick="openLaundryModal()" class="w-full bg-[var(--bg-card-hover)] hover:border-[var(--text-gold)] text-[var(--text-gold)] border border-[var(--border-gold-strong)] font-bold py-4 px-4 rounded-2xl transition flex items-center justify-between shadow-sm hover:scale-[1.01] active:scale-[0.99]">
+                        <span class="flex items-center gap-3"><i class="fas fa-shirt text-sm opacity-90"></i> <span>Select Laundry Items</span></span>
+                        <span id="selectedBadgeCount" class="bg-[var(--text-gold)] text-white px-3.5 py-1 rounded-full text-[11px] font-black shadow-sm">0 pcs</span>
+                    </button>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-[var(--text-gold)] mb-1.5 uppercase tracking-wider text-[10px]">Special Recommendations / Notes</label>
+                    <textarea id="guestDetailsArea" placeholder="e.g., Stain on collar, handle with care..." class="w-full h-20 remal-input rounded-2xl p-3.5 outline-none resize-none font-medium text-xs"></textarea>
+                </div>
+
+                <div class="space-y-3 pt-2">
+                    <button onclick="demanderConfirmation('direct')" class="w-full bg-[var(--text-gold)] text-white font-black py-4 rounded-2xl text-xs sm:text-sm shadow-lg transition-all flex items-center justify-center gap-2.5 uppercase tracking-widest hover:opacity-90 hover:scale-[1.01] active:scale-[0.99]">
+                        <i class="fas fa-concierge-bell text-base"></i> 
+                        <span>Direct Order to Laundry</span>
+                    </button>
+
+                    <button onclick="demanderConfirmation('whatsapp')" class="w-full bg-[#10b981] hover:bg-[#34d399] text-white font-black py-3.5 rounded-2xl text-xs sm:text-sm shadow-lg transition-all flex items-center justify-center gap-2.5 uppercase tracking-widest hover:scale-[1.01] active:scale-[0.99]">
+                        <i class="fab fa-whatsapp text-lg"></i> 
+                        <span>Send via WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="text-center text-[9px] text-[var(--text-muted)] pt-3 border-t border-[var(--border-gold)] tracking-widest uppercase opacity-90 font-semibold">
+                Remal Hotel & Villas Digital Systems
+            </div>
+        </div>
+
+        <div id="myOrdersModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md z-[140] flex items-center justify-center p-4 animate-fade-in">
+            <div class="bg-[var(--bg-card)] border border-[var(--border-gold-strong)] w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+                
+                <div class="flex justify-between items-center border-b border-[var(--border-gold)] pb-3">
+                    <div>
+                        <h3 class="text-sm font-serif-luxury font-bold text-[var(--text-gold)] uppercase tracking-widest flex items-center gap-2">
+                            <i class="fas fa-receipt"></i> My Orders
+                        </h3>
+                        <p class="text-[10px] text-[var(--text-muted)] mt-0.5">Your completed orders history</p>
+                    </div>
+                    <button onclick="GuestOrders.close()" class="text-[var(--text-muted)] hover:text-[var(--text-gold)] text-xl font-bold p-1">✕</button>
+                </div>
+
+                <div id="myOrdersSectionBadge" class="hidden text-[10px] bg-[var(--bg-card-hover)] border border-[var(--border-gold)] text-[var(--text-gold)] font-bold px-3 py-1 rounded-full"></div>
+
+                <div id="myOrdersList" class="flex-1 overflow-y-auto pr-1 space-y-3 scrollbar-none">
+                    <p class="text-xs text-[var(--text-muted)] text-center py-6">Loading orders...</p>
+                </div>
+                
+            </div>
+        </div>
+
+        <button id="chatFab" onclick="GuestChat.open()" class="chat-fab hidden" title="Chat with reception">
+            <i class="fas fa-comments"></i>
+            <span id="chatFabBadge" class="chat-fab-badge hidden">0</span>
+        </button>
+
+        <div id="chatModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md z-[150] flex items-center justify-center p-4">
+            <div class="chat-modal-content" style="height: 70vh; max-height: 600px;">
+                <div class="chat-modal-header">
+                    <div>
+                        <h3 class="chat-modal-title">
+                            <i class="fas fa-comments"></i> Chat with Reception
+                        </h3>
+                        <p class="chat-modal-sub" id="chatModalSub">Room ---</p>
+                    </div>
+                    <button onclick="GuestChat.close()" class="chat-modal-close">✕</button>
+                </div>
+
+                <div id="chatMessagesContainer" class="chat-messages-container">
+                    <div class="chat-empty">
+                        <p>👋 Welcome!</p>
+                        <p>Loading conversation…</p>
+                    </div>
+                </div>
+
+                <div class="chat-input-bar">
+                    <input
+                        type="text"
+                        id="chatInput"
+                        placeholder="Type your message…"
+                        autocomplete="off"
+                        onkeydown="if(event.key==='Enter'){event.preventDefault();window.__guestChatSend();}"
+                    >
+                    <button id="chatSendBtn" onclick="window.__guestChatSend()" class="chat-send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="floatingCartBar" class="hidden fixed bottom-4 left-4 right-4 max-w-md mx-auto p-3.5 rounded-2xl z-50 flex justify-between items-center animate-fade-in no-print" style="background: var(--bg-card); border: 1px solid var(--border-gold-strong); box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-[var(--text-gold)] text-white font-black flex items-center justify-center text-xs shadow-md">
+                    <i class="fas fa-basket-shopping"></i>
+                </div>
+                <div>
+                    <p id="floatingCartPieces" class="text-xs font-bold text-[var(--text-gold)]">0 pieces selected</p>
+                    <p id="floatingCartPrice" class="text-[10px] text-[var(--text-muted)] font-semibold">0.00 AED</p>
+                </div>
+            </div>
+            <button onclick="openLaundryModal()" class="bg-[var(--text-gold)] text-white font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wider shadow-md transition">
+                View / Edit
+            </button>
+        </div>
+
+        <div id="laundryModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center p-4 animate-fade-in">
+            <div class="bg-[var(--bg-card)] border border-[var(--border-gold-strong)] w-full max-w-lg rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+                
+                <div class="flex justify-between items-center border-b border-[var(--border-gold)] pb-3">
+                    <h3 class="text-xs font-serif-luxury font-bold text-[var(--text-gold)] uppercase tracking-widest flex items-center gap-2">
+                        <i class="fas fa-list-check"></i> Laundry Price List & Selection
+                    </h3>
+                    <button onclick="closeLaundryModal()" class="text-[var(--text-muted)] hover:text-[var(--text-gold)] text-xl font-bold p-1">✕</button>
+                </div>
+
+                <div class="relative">
+                    <i class="fas fa-magnifying-glass absolute left-3.5 top-3 text-[var(--text-muted)] text-xs"></i>
+                    <input type="text" id="catalogSearchInput" oninput="renderCatalogItems()" placeholder="Search item (e.g., Overall, Dress, Shirt)..." class="w-full remal-input rounded-xl pl-9 pr-3 py-2 text-xs font-medium">
+                </div>
+
+                <div>
+                    <label class="block text-[9px] font-bold text-[var(--text-gold)] mb-1.5 uppercase tracking-widest">Account & Quota Type</label>
+                    <div class="grid grid-cols-3 gap-1.5 bg-[var(--bg-dark)] p-1.5 rounded-2xl border border-[var(--border-gold)] text-[10px] font-bold text-center">
+                        <button onclick="selectCountType('hotel', true)" id="btnCountHotel" class="py-2.5 px-1 rounded-xl bg-[var(--text-gold)] text-white shadow transition leading-tight">Hotel Count (Free)</button>
+                        <button onclick="selectCountType('quota_extra', true)" id="btnCountQuotaExtra" class="py-2.5 px-1 rounded-xl text-[var(--text-muted)] transition leading-tight">Hotel & Extra</button>
+                        <button onclick="selectCountType('guest', true)" id="btnCountGuest" class="py-2.5 px-1 rounded-xl text-[var(--text-muted)] transition leading-tight">Guest Count (Full)</button>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 text-xs font-bold">
+                    <button onclick="switchCatalogService('laundry')" id="catTabLaundry" class="flex-1 py-2.5 rounded-xl bg-[var(--text-gold)] text-white shadow transition">Laundry</button>
+                    <button onclick="switchCatalogService('dry')" id="catTabDry" class="flex-1 py-2.5 rounded-xl bg-[var(--bg-card-hover)] text-[var(--text-muted)] border border-[var(--border-gold)] transition">Dry Cleaning</button>
+                    <button onclick="switchCatalogService('pressing')" id="catTabPressing" class="flex-1 py-2.5 rounded-xl bg-[var(--bg-card-hover)] text-[var(--text-muted)] border border-[var(--border-gold)] transition">Pressing</button>
+                </div>
+
+                <div id="catalogItemsContainer" class="flex-1 overflow-y-auto pr-1 space-y-3 scrollbar-none"></div>
+
+                <div class="border-t border-[var(--border-gold)] pt-3 space-y-3">
+                    <div class="flex justify-between items-center text-xs font-bold">
+                        <span class="text-[var(--text-muted)]">Selected Items & Subtotal:</span>
+                        <span id="modalCatalogTotalSummary" class="text-[var(--text-gold)] font-serif-luxury text-sm">0 pcs · 0.00 AED</span>
+                    </div>
+                    <button onclick="confirmLaundrySelection()" class="w-full bg-[var(--text-gold)] text-white font-bold py-3.5 rounded-2xl text-xs uppercase tracking-widest shadow-lg transition hover:opacity-90">
+                        Confirm Selection
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="policyModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md z-[120] flex items-center justify-center p-4 animate-fade-in">
+            <div class="bg-[var(--bg-card)] border border-[var(--border-gold-strong)] w-full max-w-lg rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col text-xs" id="policyModalContent">
+                
+                <div class="flex justify-between items-center border-b border-[var(--border-gold)] pb-3">
+                    <h3 class="text-xs font-serif-luxury font-bold text-[var(--text-gold)] uppercase tracking-widest flex items-center gap-2">
+                        <i class="fas fa-file-contract"></i> <span id="policyModalHeader">Order Confirmation & Policy</span>
+                    </h3>
+                    <button onclick="closePolicyConfirmationModal()" class="text-[var(--text-muted)] hover:text-[var(--text-gold)] text-xl font-bold p-1">✕</button>
+                </div>
+
+                <div class="flex-1 overflow-y-auto space-y-4 pr-1 scrollbar-none">
+                    <div id="modalVatNotice" class="bg-[var(--bg-card-hover)] border border-[var(--border-gold)] p-3 rounded-2xl text-center font-bold text-[var(--text-gold)] text-[11px]"></div>
+
+                    <div class="space-y-2 bg-[var(--bg-dark)] p-3.5 rounded-2xl border border-[var(--border-gold)]">
+                        <h4 id="modalDeliveryTitle" class="font-bold uppercase text-[var(--text-gold)] text-[10px] border-b border-[var(--border-gold)] pb-1.5 tracking-wider flex items-center gap-2">
+                            <i class="fas fa-clock"></i> <span></span>
+                        </h4>
+                        <ul class="space-y-1.5 text-[var(--text-main)] text-[11px] leading-relaxed">
+                            <li id="modalBefore9"></li>
+                            <li id="modalAfter9"></li>
+                            <li id="modalExpress" class="font-bold text-amber-500 pt-1"></li>
+                        </ul>
+                    </div>
+
+                    <div class="space-y-2 bg-[var(--bg-dark)] p-3.5 rounded-2xl border border-[var(--border-gold)]">
+                        <h4 id="modalTermsTitle" class="font-bold uppercase text-[var(--text-gold)] text-[10px] border-b border-[var(--border-gold)] pb-1.5 tracking-wider flex items-center gap-2">
+                            <i class="fas fa-circle-exclamation"></i> <span></span>
+                        </h4>
+                        <p id="modalTermsBody" class="text-[11px] text-[var(--text-muted)] leading-relaxed"></p>
+                        
+                        <div id="modalLiability" class="bg-red-500/10 border-l-2 border-red-500 p-3 rounded-r-xl text-red-500 font-bold text-[11px] mt-2 leading-relaxed"></div>
+                    </div>
+                </div>
+
+                <div class="border-t border-[var(--border-gold)] pt-3 space-y-3">
+                    <div class="flex items-start gap-2.5 bg-[var(--bg-dark)] p-3 rounded-2xl border border-[var(--border-gold)]">
+                        <input type="checkbox" id="acceptPolicyCheck" class="w-4 h-4 mt-0.5 accent-[var(--text-gold)] cursor-pointer">
+                        <label for="acceptPolicyCheck" class="text-[11px] font-bold text-[var(--text-main)] cursor-pointer select-none">
+                            I have read and agree to the hotel laundry policies and delivery terms.
+                        </label>
+                    </div>
+
+                    <button id="modalActionBtn" onclick="executerEnvoiApresAcceptation()" class="w-full bg-[var(--text-gold)] text-white font-black py-3.5 rounded-2xl text-xs sm:text-sm shadow-xl transition flex items-center justify-center gap-2.5 uppercase tracking-widest hover:opacity-90 hover:scale-[1.01]">
+                        <i id="modalActionIcon" class="fas fa-check-circle"></i> 
+                        <span id="modalActionText">Confirm & Finalize Order</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="receiptModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md z-[130] flex items-center justify-center p-4 animate-fade-in">
+            <div class="bg-[var(--bg-card)] border border-[var(--border-gold-strong)] w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col text-xs">
+                
+                <div class="flex justify-between items-center border-b border-[var(--border-gold)] pb-3">
+                    <div>
+                        <h3 class="text-xs font-serif-luxury font-bold text-[var(--text-gold)] uppercase tracking-widest flex items-center gap-2">
+                            <i class="fas fa-receipt"></i> <span>Laundry Order Details</span>
+                        </h3>
+                        <p id="receiptRef" class="text-[10px] text-[var(--text-muted)] font-mono">Receipt ID: #---</p>
+                    </div>
+                    <button onclick="closeReceiptModal()" class="text-[var(--text-muted)] hover:text-[var(--text-gold)] text-xl font-bold p-1">✕</button>
+                </div>
+
+                <div class="flex-1 overflow-y-auto space-y-4 pr-1 scrollbar-none">
+                    <div class="bg-[var(--bg-dark)] p-3.5 rounded-2xl border border-[var(--border-gold)] space-y-1.5 text-[11px]">
+                        <div class="flex justify-between"><span class="text-[var(--text-muted)]">Guest Name:</span> <span id="receiptGuestName" class="font-bold text-[var(--text-main)]">---</span></div>
+                        <div class="flex justify-between"><span class="text-[var(--text-muted)]">Room Number:</span> <span id="receiptRoom" class="font-bold text-[var(--text-gold)]">---</span></div>
+                        <div class="flex justify-between"><span class="text-[var(--text-muted)]">Service:</span> <span id="receiptService" class="font-bold text-[var(--text-main)]">---</span></div>
+                        <div class="flex justify-between"><span class="text-[var(--text-muted)]">Current Status:</span> <span id="receiptStatus" class="font-bold text-amber-500">---</span></div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-[var(--text-gold)] text-[10px] uppercase tracking-wider mb-2">Selected Items</h4>
+                        <div id="receiptItemsContainer" class="space-y-2 bg-[var(--bg-dark)] p-3.5 rounded-2xl border border-[var(--border-gold)]"></div>
+                    </div>
+
+                    <div id="receiptNotesBox" class="hidden bg-[var(--bg-dark)] p-3 rounded-2xl border border-[var(--border-gold)] space-y-1">
+                        <p class="text-[9px] font-bold text-[var(--text-gold)] uppercase">Notes / Recommendations</p>
+                        <p id="receiptNotesText" class="text-[11px] text-[var(--text-muted)] italic">---</p>
+                    </div>
+
+                    <div class="bg-[var(--bg-dark)] p-3.5 rounded-2xl border border-[var(--border-gold)] space-y-2 text-[11px]">
+                        <div class="flex justify-between text-[var(--text-muted)]"><span>Subtotal:</span><span id="receiptSubtotal" class="font-bold text-[var(--text-main)]">0.00 AED</span></div>
+                        <div class="flex justify-between text-[var(--text-muted)]"><span>VAT (5%):</span><span id="receiptVat" class="font-bold text-[var(--text-main)]">0.00 AED</span></div>
+                        <div class="flex justify-between text-xs font-bold text-[var(--text-gold)] border-t border-[var(--border-gold)] pt-2">
+                            <span>Grand Total:</span>
+                            <span id="receiptGrandTotal" class="font-serif-luxury text-sm">0.00 AED</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-[var(--border-gold)] pt-3">
+                    <button onclick="closeReceiptModal()" class="w-full bg-[var(--bg-card-hover)] text-[var(--text-gold)] border border-[var(--border-gold-strong)] font-bold py-3 rounded-2xl text-xs uppercase tracking-wider hover:opacity-90 transition">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- ═══ END mainApp ═══ -->
+
+    <!-- SCRIPTS -->
+    <script>
+        window.SUPABASE_URL = 'https://kmtnkjhjbmsietrlebhs.supabase.co';
+        window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImttdG5ramhqYm1zaWV0cmxlYmhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMjQ1MTMsImV4cCI6MjEwMTkwMDUxM30.fOMotE-gsxKkTtrgzbrk5qsC22qWdQmF__k89Xt-ErA';
+        window.supabaseClient = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+    </script>
+
+    <script src="assets/js/data/database.js"></script>
+    <script src="assets/js/data/translations.js"></script>
+    <script src="assets/js/data/policies.js"></script>
+    <script src="assets/js/core/cart.js"></script>
+    <script src="assets/js/ui/theme.js"></script>
+    <script src="assets/js/ui/status.js"></script>
+    <script src="assets/js/services/auth.js"></script>
+    <script src="assets/js/services/orders.js"></script>
+    <script src="assets/js/services/chat.js"></script>
+    <script src="assets/js/services/orders-tracker.js"></script>
+    
+    <!-- 🎯 JS WELCOME -->
+    <script src="assets/js/welcome.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            const savedLang = localStorage.getItem('remal_lang') || 'en';
+            changerLangueCustom(savedLang);
+
+            const savedRoom = localStorage.getItem('remal_guest_room');
+            const savedGuestData = localStorage.getItem('remal_guest_data');
+
+            if (savedRoom && savedGuestData) {
+                try {
+                    const parsedData = JSON.parse(savedGuestData);
+                    appliquerEtatGuestVerifie(parsedData, savedRoom);
+                } catch (e) {
+                    console.error("Erreur de restauration des données de session");
+                }
+            } else {
+                const urlParams = new URLSearchParams(window.location.search);
+                const roomFromUrl = urlParams.get('room');
+                if (roomFromUrl) {
+                    const roomInput = document.getElementById('guestRoomInput');
+                    if (roomInput) roomInput.value = roomFromUrl;
+                    onRoomNumberTyped(roomFromUrl);
+                }
+            }
+
+            window.addEventListener('click', (e) => {
+                if (!e.target.closest('#langDropdownBtn') && !e.target.closest('#langMenu')) {
+                    const menu = document.getElementById('langMenu');
+                    if (menu) menu.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+
+<script>
+    let guestHubSession = null;
+
+    function persistGuestSession(room, name) {
+        try {
+            localStorage.setItem('remal_guest_room', room);
+            localStorage.setItem('remal_guest_name', name);
+        } catch (e) {}
+    }
+
+    function getSavedGuestSession() {
+        const room = localStorage.getItem('remal_guest_room');
+        const name = localStorage.getItem('remal_guest_name');
+        if (room && name) return { room, name };
+        return null;
+    }
+
+    function initGuestHubSession() {
+        const params = new URLSearchParams(window.location.search);
+        const room = params.get('room');
+        const name = params.get('name');
+        const returnURL = params.get('return_url');
+
+        if (room && name) {
+            guestHubSession = { room, name, returnURL: returnURL || window.location.origin + '/index.html' };
+            localStorage.setItem('guestHub_session', JSON.stringify(guestHubSession));
+            persistGuestSession(room, name);
+
+            const roomInput = document.getElementById('guestRoomInput');
+            if (roomInput) roomInput.value = room;
+
+            showGuestHubElements(name, room);
+
+            setTimeout(() => {
+                if (typeof verifierNomClient === 'function' && roomInput) {
+                    const nameInput = document.getElementById('guestNameInput');
+                    if (nameInput) {
+                        nameInput.value = name;
+                        verifierNomClient();
+                    }
+                }
+            }, 500);
+
+            window.history.replaceState({}, document.title, window.location.pathname);
+        } else {
+            const savedSession = localStorage.getItem('guestHub_session');
+            if (savedSession) {
+                try {
+                    guestHubSession = JSON.parse(savedSession);
+                    showGuestHubElements(guestHubSession.name, guestHubSession.room);
+                } catch (e) {}
+            } else {
+                const fallback = getSavedGuestSession();
+                if (fallback) {
+                    guestHubSession = { room: fallback.room, name: fallback.name, returnURL: window.location.origin + '/index.html' };
+                    showGuestHubElements(fallback.name, fallback.room);
+                }
+            }
+        }
+    }
+
+    function showGuestHubElements(name, room) {
+        const returnBtn = document.getElementById('returnToGuestHubBtn');
+        const sessionBanner = document.getElementById('guestSessionBanner');
+        const sessionName = document.getElementById('sessionGuestName');
+        const sessionRoom = document.getElementById('sessionGuestRoom');
+
+        if (returnBtn) returnBtn.classList.remove('hidden');
+
+        if (sessionBanner) {
+            sessionBanner.classList.remove('hidden');
+            if (sessionName) sessionName.textContent = name;
+            if (sessionRoom) sessionRoom.textContent = `Chambre ${room}`;
+        }
+
+        setTimeout(() => {
+            if (sessionBanner) {
+                sessionBanner.style.transition = 'all 0.5s ease';
+                sessionBanner.style.opacity = '0';
+                sessionBanner.style.transform = 'translateX(-50%) translateY(20px)';
+                setTimeout(() => sessionBanner.remove(), 500);
+            }
+        }, 5000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(initGuestHubSession, 800);
+    });
+</script>
+
+<script>
+(function() {
+    const wrap = document.querySelector('.header-parallax-wrap');
+    const bg = wrap ? wrap.querySelector('.header-bg') : null;
+    if (!wrap || !bg) return;
+
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                const scrollY = window.scrollY;
+                bg.style.transform = `translateY(${scrollY * 0.3}px) scale(1.1)`;
+                ticking = false;
+            });
+            ticking = true;
+        }
+    }, { passive: true });
+})();
+</script>
+
+<script>
+function updateStepIndicator() {
+    const step1 = document.getElementById('step1Chip');
+    const step2 = document.getElementById('step2Chip');
+    const step3 = document.getElementById('step3Chip');
+    if (!step1 || !step2 || !step3) return;
+
+    [step1, step2, step3].forEach(el => el.classList.remove('active', 'done'));
+
+    let currentStep = 1;
+    const isVerified = (typeof isGuestVerified !== 'undefined' && isGuestVerified === true);
+    if (isVerified) currentStep = 2;
+
+    const cartItems = (window.finalLaundryCart && Object.keys(window.finalLaundryCart).length) || 0;
+    if (isVerified && cartItems > 0) currentStep = 3;
+
+    if (currentStep === 1) {
+        step1.classList.add('active');
+    } else if (currentStep === 2) {
+        step1.classList.add('done');
+        step2.classList.add('active');
+    } else {
+        step1.classList.add('done');
+        step2.classList.add('done');
+        step3.classList.add('active');
+    }
 }
 
-#mainApp.visible {
-    display: block !important;
-    opacity: 1 !important;
+const _origConfirm = window.confirmLaundrySelection;
+if (typeof _origConfirm === 'function') {
+    window.confirmLaundrySelection = function() {
+        const r = _origConfirm.apply(this, arguments);
+        setTimeout(updateStepIndicator, 50);
+        return r;
+    };
 }
 
-/* Le conteneur principal */
-#splashScreen {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    background: #0a0908 !important; /* Noir profond */
-    z-index: 2147483647 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-    text-align: center;
-    transition: opacity 1s ease, visibility 1s;
-    overflow: hidden;
-    padding: 20px;
+const _origAppliquer = window.appliquerEtatGuestVerifie;
+if (typeof _origAppliquer === 'function') {
+    window.appliquerEtatGuestVerifie = function() {
+        const r = _origAppliquer.apply(this, arguments);
+        setTimeout(updateStepIndicator, 50);
+        return r;
+    };
 }
 
-/* Halo lumineux derrière le logo */
-#splashScreen::after {
-    content: '';
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(220, 167, 115, 0.15) 0%, transparent 70%);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -80%);
-    z-index: -1;
-    animation: pulseGlow 4s infinite alternate;
-}
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(updateStepIndicator, 500);
+});
+</script>
 
-/* Grille dorée subtile en fond */
-#splashScreen::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: 
-        linear-gradient(rgba(220, 167, 115, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(220, 167, 115, 0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
-    pointer-events: none;
-    z-index: -2;
-}
+<script>
+window.__guestChatSend = async function () {
+    const input = document.getElementById('chatInput');
+    if (!input) return;
+    const text = input.value.trim();
+    if (!text) return;
 
-/* ═══ ANIMATIONS ═══ */
-@keyframes floatLogo {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
-}
+    input.value = ''; 
+    const ok = await window.GuestChat.sendMessage(text);
+    if (!ok) {
+        input.value = text; 
+        alert('Could not send message. Please retry.');
+    }
+};
+</script>
 
-@keyframes pulseGlow {
-    0% { transform: translate(-50%, -80%) scale(0.9); opacity: 0.5; }
-    100% { transform: translate(-50%, -80%) scale(1.2); opacity: 1; }
-}
-
-@keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes shimmer {
-    0% { background-position: -200% center; }
-    100% { background-position: 200% center; }
-}
-
-@keyframes blinkCursor {
-    50% { border-color: transparent; }
-}
-
-/* ═══ LE LOGO ═══ */
-.remal-logo-container {
-    position: relative;
-    margin-bottom: 50px;
-    opacity: 0;
-    animation: fadeUp 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 0.5s;
-}
-
-.remal-logo-container img {
-    height: 160px;
-    width: auto;
-    object-fit: contain;
-    animation: floatLogo 6s ease-in-out infinite;
-    filter: drop-shadow(0 0 20px rgba(220, 167, 115, 0.3));
-}
-
-/* ═══ LIGNE DORÉE ═══ */
-.remal-gold-line {
-    width: 0px;
-    height: 1px;
-    background: #DCA773;
-    margin: 0 auto 50px auto;
-    opacity: 0;
-    animation: lineGrow 1.5s ease forwards 1.5s;
-}
-
-@keyframes lineGrow {
-    to { width: 120px; opacity: 1; }
-}
-
-/* ═══ CITATION (Effet Machine à écrire) ═══ */
-.remal-welcome-text {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 18px;
-    color: #f5f5f4;
-    text-align: center;
-    line-height: 1.8;
-    letter-spacing: 1px;
-    opacity: 0;
-    animation: fadeUp 1.5s ease forwards 2s;
-    margin-bottom: 60px;
-    padding: 0 20px;
-}
-
-/* ═══ LE BOUTON (Effet Lumineux) ═══ */
-.remal-btn-enter {
-    position: relative;
-    background: transparent;
-    border: 1px solid rgba(220, 167, 115, 0.4);
-    color: #DCA773;
-    padding: 18px 50px;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-radius: 50px;
-    overflow: hidden;
-    opacity: 0;
-    animation: fadeUp 1.5s ease forwards 2.8s;
-    transition: all 0.5s ease;
-    z-index: 10;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-/* L'effet de brillance qui traverse le bouton */
-.remal-btn-enter::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(220, 167, 115, 0.2), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
-}
-
-.remal-btn-enter:hover, 
-.remal-btn-enter:active {
-    background: rgba(220, 167, 115, 0.1);
-    border-color: #DCA773;
-    box-shadow: 0 0 40px rgba(220, 167, 115, 0.3);
-    transform: translateY(-2px) scale(1.02);
-}
-
-.remal-btn-enter:hover::before {
-    transform: translateX(100%);
-}
-
-/* ═══ FOOTER ═══ */
-.remal-splash-footer {
-    position: absolute;
-    bottom: 30px;
-    font-size: 9px;
-    color: #78716c;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    opacity: 0;
-    animation: fadeUp 1.5s ease forwards 3.5s;
-}
+</body>
+</html>
