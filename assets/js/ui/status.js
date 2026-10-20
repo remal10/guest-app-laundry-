@@ -1,9 +1,28 @@
 // ═══════════════════════════════════════════════════════════════════
 // REMAL GUEST LAUNDRY PORTAL — Status Tracking
 // Suivi des bordereaux + realtime + Timeline visuelle
+// ✅ FIX K2 & K3 : Nettoyage cache Guest & robustesse
 // ═══════════════════════════════════════════════════════════════════
 
 let currentActiveOrders = [];
+
+// 🛡️ FIX K2 : Nettoyage du cache client à l'entrée
+function secureGuestCache(roomNumber) {
+    try {
+        const lastRoom = localStorage.getItem('remal_last_guest_room');
+        
+        if (lastRoom && lastRoom !== String(roomNumber)) {
+            console.log("🧹 [K2 Cache] Nouvelle chambre détectée. Nettoyage des anciennes données.");
+            localStorage.removeItem('remal_guest_orders_cache');
+            localStorage.removeItem('remal_guest_chat_cache');
+            localStorage.removeItem('remal_guest_name');
+        }
+        
+        localStorage.setItem('remal_last_guest_room', String(roomNumber));
+    } catch (e) {
+        console.warn("Erreur nettoyage cache Guest:", e);
+    }
+}
 
 function obtenirReceiptId(order) {
     if (!order) return '---';
@@ -13,8 +32,11 @@ function obtenirReceiptId(order) {
 async function verifierStatutDerniereCommande(roomNum) {
     if (!roomNum || !cachedGuestData) return;
 
+    // 🛡️ On sécurise le cache au moment où on vérifie les commandes
+    secureGuestCache(roomNum);
+
     const roomStr = String(roomNum).trim();
-    const guestNameClean = cachedGuestData.guest_name;
+    const guestNameClean = cachedGuestData.guest_name || '';
 
     const ilYa24Heures = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
@@ -36,7 +58,7 @@ async function verifierStatutDerniereCommande(roomNum) {
 
                     if (heuresDepuisCreation >= 24) return false;
 
-                    if (order.guest_name && order.guest_name !== 'Guest') {
+                    if (order.guest_name && order.guest_name !== 'Guest' && guestNameClean) {
                         const cleanOrderGuest = order.guest_name.toLowerCase().replace(SALUTATIONS_REGEX, '').trim();
                         const cleanPmsGuest = guestNameClean.toLowerCase().replace(SALUTATIONS_REGEX, '').trim();
                         
