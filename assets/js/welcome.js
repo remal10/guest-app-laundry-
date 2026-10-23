@@ -1,40 +1,36 @@
 // ═══════════════════════════════════════════════════════════════════
-// REMAL GUEST APP — WELCOME SCREEN LOGIC (IMMERSIVE)
+// REMAL GUEST APP — WELCOME SCREEN LOGIC
 // ═══════════════════════════════════════════════════════════════════
 
 function enterApp() {
     const splash = document.getElementById('splashScreen');
     const mainApp = document.getElementById('mainApp');
 
-    if (!splash || !mainApp) return;
+    if (!splash || !mainApp || splash.classList.contains('is-leaving')) return;
 
-    // 1. On affiche l'application en fond
-    mainApp.style.display = 'block';
-    void mainApp.offsetWidth;
+    // Utiliser la classe CSS plutôt que style.display : le CSS du splash
+    // utilise !important et doit rester la source de vérité de l'affichage.
+    mainApp.classList.add('visible');
+    splash.classList.add('is-leaving');
 
-    // 2. On lance l'animation de disparition du Splash
-    splash.style.opacity = '0';
-    splash.style.visibility = 'hidden';
-    
-    // 3. On nettoie après l'animation
-    setTimeout(() => {
+    const finishTransition = () => {
         splash.style.display = 'none';
-        mainApp.classList.add('visible');
-    }, 1000);
+        splash.setAttribute('aria-hidden', 'true');
+    };
 
-    // 4. Vibration "haptique" premium
-    if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
+    splash.addEventListener('transitionend', (event) => {
+        if (event.target === splash && event.propertyName === 'opacity') {
+            finishTransition();
+        }
+    }, { once: true });
+
+    // Secours pour les navigateurs où transitionend n'est pas déclenché.
+    window.setTimeout(finishTransition, 750);
+
+    // Retour tactile discret, si pris en charge par l'appareil.
+    if (navigator.vibrate) {
+        try { navigator.vibrate(18); } catch (_) { /* vibration optionnelle */ }
+    }
 }
 
-// Exposer globalement
 window.enterApp = enterApp;
-
-// Effet de machine à écrire au chargement
-document.addEventListener('DOMContentLoaded', () => {
-    const textElement = document.querySelector('.remal-welcome-text');
-    if (textElement) {
-        const text = `"Every detail matters.<br>We are delighted to serve you."`;
-        // On garde le texte tel quel mais on peut ajouter une logique ici si besoin
-        // L'animation de base est gérée par le CSS (fadeUp)
-    }
-});
