@@ -1,21 +1,27 @@
-// ═══════════════════════════════════════════════════════════════════
-// REMAL GUEST APP — WELCOME SCREEN LOGIC
-// ═══════════════════════════════════════════════════════════════════
-
+// REMAL GUEST APP — ROBUST WELCOME SCREEN LOGIC
 function enterApp() {
     const splash = document.getElementById('splashScreen');
     const mainApp = document.getElementById('mainApp');
 
-    if (!splash || !mainApp || splash.classList.contains('is-leaving')) return;
+    if (!mainApp) {
+        console.error('[Welcome] #mainApp not found.');
+        return;
+    }
 
-    // Remove the inline !important hide rule before revealing the app.
-    // A CSS class cannot override display:none!important set inline.
-    mainApp.style.removeProperty('display');
+    // Force the main app visible even if an inline !important rule or CSS
+    // specificity would otherwise keep it hidden.
+    mainApp.style.setProperty('display', 'block', 'important');
+    mainApp.style.setProperty('visibility', 'visible', 'important');
+    mainApp.style.setProperty('opacity', '1', 'important');
     mainApp.classList.add('visible');
-    splash.classList.add('is-leaving');
+    mainApp.removeAttribute('aria-hidden');
 
+    if (!splash) return;
+
+    // Only hide the welcome layer after the app has been made visible.
+    splash.classList.add('is-leaving');
     const finishTransition = () => {
-        splash.style.display = 'none';
+        splash.style.setProperty('display', 'none', 'important');
         splash.setAttribute('aria-hidden', 'true');
     };
 
@@ -25,13 +31,10 @@ function enterApp() {
         }
     }, { once: true });
 
-    // Fallback for browsers where transitionend does not fire.
-    window.setTimeout(finishTransition, 750);
+    window.setTimeout(finishTransition, 800);
 
-    // Subtle tactile feedback, when supported.
     if (navigator.vibrate) {
-        try { navigator.vibrate(18); } catch (_) { /* optional vibration */ }
+        try { navigator.vibrate(18); } catch (_) {}
     }
 }
-
 window.enterApp = enterApp;
