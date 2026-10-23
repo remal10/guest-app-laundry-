@@ -2,8 +2,9 @@
 // REMAL GUEST LAUNDRY PORTAL — Auth
 // ═══════════════════════════════════════════════════════════════════
 
-const SUPABASE_URL = 'https://kmtnkjhjbmsietrlebhs.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImttdG5ramhqYm1zaWV0cmxlYmhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMjQ1MTMsImV4cCI6MjEwMTkwMDUxM30.fOMotE-gsxKkTtrgzbrk5qsC22qWdQmF__k89Xt-ErA';
+// ✅ NOUVELLES CLÉS (Projet Remal Laundry v3)
+const SUPABASE_URL = 'https://eykpakjmrpvsmknxjlrc.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5a3Bha2ptcnB2c21rbnhqbHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1Nzk2NTgsImV4cCI6MjEwODE1NTY1OH0.mkrfRPBGTxjdFv3EJLl7vrX97eDWzd_mbBuJrNfv1aE';
 
 let cachedGuestData = null;
 let isGuestVerified = false;
