@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════
-// REMAL GUEST APP — MY ORDERS TRACKER (v2)
+// REMAL GUEST APP — MY ORDERS TRACKER (v3 - Corrigé)
 // Affiche les commandes actives ET l'historique + Badge intelligent
 // ═══════════════════════════════════════════════════════════════════
 
@@ -68,7 +68,7 @@ window.GuestOrders = (function () {
         const container = document.getElementById('myOrdersList');
         if (!container) return;
 
-        // On sépare les commandes en cours et les terminées
+        // 🛡️ SÉPARATION STRICTE : La commande n'est "terminée" QUE si elle est "delivered"
         const activeOrders = orders.filter(o => normalizeStatus(o.status).key !== 'delivered');
         const pastOrders = orders.filter(o => normalizeStatus(o.status).key === 'delivered');
 
@@ -200,13 +200,32 @@ window.GuestOrders = (function () {
     }
 
     // ───────────────────────────────────────────────────────────────
-    // NORMALIZE STATUS
+    // NORMALIZE STATUS (Version robuste - corrige le bug)
     // ═══════════════════════════════════════════════════════════════
     function normalizeStatus(raw) {
         const s = String(raw || 'collected').toLowerCase().trim();
-        if (s.includes('delivered') || s.includes('completed')) return { key: 'delivered', label: 'Delivered', icon: '✅' };
-        if (s.includes('ready')) return { key: 'ready', label: 'Ready', icon: '✨' };
-        if (s.includes('washing') || s.includes('in_progress') || s.includes('progress')) return { key: 'washing', label: 'Washing', icon: '🧼' };
+        
+        // 1. Si le statut contient "deliver" ou "complet" ou "done", c'est TERMINÉ
+        if (s.includes('deliver') || s.includes('complet') || s.includes('done') || s.includes('termin')) {
+            return { key: 'delivered', label: 'Delivered', icon: '✅' };
+        }
+        
+        // 2. Si "ready" ou "pret", c'est PRÊT
+        if (s.includes('ready') || s.includes('pret')) {
+            return { key: 'ready', label: 'Ready', icon: '✨' };
+        }
+        
+        // 3. Si "washing", "progress", "lavage", c'est EN COURS
+        if (s.includes('washing') || s.includes('in_progress') || s.includes('progress') || s.includes('lavage')) {
+            return { key: 'washing', label: 'Washing', icon: '🧼' };
+        }
+        
+        // 4. Si "pending" ou "attente", c'est EN ATTENTE (mais toujours actif)
+        if (s.includes('pending') || s.includes('attente') || s.includes('new')) {
+            return { key: 'collected', label: 'Pending', icon: '📥' };
+        }
+
+        // 5. Par défaut (si le staff a mis "Collected" ou rien), c'est COLLECTÉ
         return { key: 'collected', label: 'Collected', icon: '📥' };
     }
 
@@ -313,4 +332,4 @@ window.GuestOrders = (function () {
     };
 })();
 
-console.log('✅ [GuestOrders] Loaded (Active & Past Orders)');
+console.log('✅ [GuestOrders] Loaded (Active & Past Orders - v3 Corrigé)');
