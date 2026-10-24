@@ -163,7 +163,7 @@ async function enregistrerCommandeDansSupabase() {
         vat: vatCalc,
         grand_total: grandTotalCalc,
         special_notes: specialNotes || 'None',
-        status: 'Pending',
+        status: 'Collected', // ✅ On met 'Collected' au lieu de 'Pending' pour que ça reste actif
         accepted_policy: true,
         created_by: 'pending'
     };
@@ -179,6 +179,13 @@ async function enregistrerCommandeDansSupabase() {
     }
 
     const insertedOrder = (data && data.length > 0) ? data[0] : null;
+
+    // ✅ On force le rafraîchissement de la Guest App IMMÉDIATEMENT
+    if (window.GuestOrders && typeof window.GuestOrders.refresh === 'function') {
+        setTimeout(() => {
+            window.GuestOrders.refresh();
+        }, 300);
+    }
 
     return {
         insertedOrder, room, guestName, quotaText, isExtraCharged, service,
