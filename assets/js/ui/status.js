@@ -2,6 +2,7 @@
 // REMAL GUEST LAUNDRY PORTAL — Status Tracking
 // Suivi des bordereaux + realtime + Timeline visuelle
 // ✅ FIX K2 & K3 : Nettoyage cache Guest & robustesse
+// ✅ FIX K4 : La commande reste affichée jusqu'à "Delivered"
 // ═══════════════════════════════════════════════════════════════════
 
 let currentActiveOrders = [];
@@ -69,19 +70,15 @@ async function verifierStatutDerniereCommande(roomNum) {
                         if (!matchesName) return false;
                     }
 
-                    const st = order.status || 'Collected';
+                    const st = String(order.status || 'Collected').toLowerCase().trim();
 
-                    // On affiche UNIQUEMENT les commandes en cours
-                    if (['Collected', 'Washing', 'Ready', 'Pending', 'In Progress'].includes(st)) {
-                        return true;
+                    // ✅ LOGIQUE INVERSÉE : On cache SI c'est Delivered/Completed, SINON on garde
+                    if (st.includes('deliver') || st.includes('complet') || st.includes('done') || st.includes('termin')) {
+                        return false; // On le retire du haut (il ira dans l'historique)
                     }
 
-                    // Si c'est Delivered, on le retire du haut
-                    if (st === 'Delivered' || st === 'Completed') {
-                        return false; 
-                    }
-
-                    return false;
+                    // Pour tout le reste (Collected, Washing, Ready, Pending, In Progress, etc.)
+                    return true;
                 });
 
                 currentActiveOrders = filteredData;
@@ -150,7 +147,13 @@ function afficherBannerStatutGuestMultiples(orders) {
     let html = '';
 
     orders.forEach((order, index) => {
-        const st = order.status || 'Collected';
+        const rawStatus = String(order.status || 'Collected').toLowerCase().trim();
+        let st = 'Collected';
+        if (rawStatus.includes('deliver') || rawStatus.includes('complet')) st = 'Delivered';
+        else if (rawStatus.includes('ready')) st = 'Ready';
+        else if (rawStatus.includes('washing') || rawStatus.includes('progress')) st = 'Washing';
+        else if (rawStatus.includes('pending')) st = 'Pending';
+
         const currentStepIndex = statusToStepIndex[st] !== undefined ? statusToStepIndex[st] : 0;
 
         const totalPcs = order.total_pieces || 0;
